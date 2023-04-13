@@ -10,7 +10,8 @@ struct Tarea {
 }typedef Tarea;
 
 void cargarTareas(Tarea **arreglo, int cantidad);
-void mostrarTareas(Tarea **arreglo, int cantidad);
+void mostrarTareas(Tarea **arreglo, Tarea **tareasRealizadas,int cantidad);
+void listarTareas(Tarea **arreglo,Tarea **tareasRealizadas,int cantidad);
 
 int main(){
     int cantidadTareas;
@@ -18,15 +19,20 @@ int main(){
     scanf("%d", &cantidadTareas);
 
     Tarea** arreglo = (Tarea**) malloc(sizeof(Tarea*)*cantidadTareas);
+    Tarea** tareasRealizadas = (Tarea**) malloc(sizeof(Tarea*)*cantidadTareas);
 
     //inicializo en null todos los elementos del vector
     for (int i = 0; i < cantidadTareas; i++)
     {
         arreglo[i] = NULL;
+        tareasRealizadas[i] = NULL;
     }
     
+
+
     cargarTareas(arreglo, cantidadTareas);
-    mostrarTareas(arreglo, cantidadTareas);
+    listarTareas(arreglo,tareasRealizadas,cantidadTareas);
+    mostrarTareas(arreglo, tareasRealizadas, cantidadTareas);
 
     //liberar memoria
         for (int i = 0; i < cantidadTareas; i++)
@@ -54,12 +60,37 @@ void cargarTareas(Tarea **arreglo, int cantidad){
     }
 }
 
-void mostrarTareas(Tarea **arreglo, int cantidad){
+void listarTareas(Tarea **arreglo,Tarea **tareasRealizadas,int cantidad){
+    char respuesta[2];
+    for (int i = 0; i < cantidad; i++)
+    {
+        printf("Se realizo la siguiente tarea? %s (SI/NO): ", arreglo[i]->Descripcion);
+        scanf("%s", respuesta);
+
+        if (respuesta == "SI")
+        {
+            tareasRealizadas[i] = arreglo[i];
+            arreglo[i]=NULL;
+
+        }
+    }
+}
+
+void mostrarTareas(Tarea **arreglo, Tarea **tareasRealizadas, int cantidad){
+    printf("Las tareas realizadas son: ");
+
     for (int i = 0; i < cantidad; i++)
     {
         printf("Numero de tarea: %d\n", arreglo[i]->TareaID);
         printf("Duracion: %d\n", arreglo[i]->Duracion);
         printf("La descripcion de la tarea %d es: %s\n", arreglo[i]->TareaID ,arreglo[i]->Descripcion);
     }
-    
+
+    printf("Las tareas pendientes son: ");
+        for (int i = 0; i < cantidad; i++)
+    {
+        printf("Numero de tarea: %d\n", tareasRealizadas[i]->TareaID);
+        printf("Duracion: %d\n", tareasRealizadas[i]->Duracion);
+        printf("La descripcion de la tarea %d es: %s\n", tareasRealizadas[i]->TareaID ,tareasRealizadas[i]->Descripcion);
+    } 
 }
