@@ -107,3 +107,7 @@ void mostrarTareas(Tarea **tareasPendientes, Tarea **tareasRealizadas, int canti
         }
     } 
 }
+
+void buscarTarea(){
+    
+}
