@@ -4,14 +4,14 @@
             "name": "C/C++: gcc.exe Compilar y depurar el archivo activo",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
+            "program": "${fileDirname}/${fileBasenameNoExtension}.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],
-            "externalConsole": true,
+            "externalConsole": false,
             "MIMode": "gdb",
-            "miDebuggerPath": "C:\\MinGW\\bin\\gdb.exe",
+            "miDebuggerPath": "C:/MinGW/bin/gdb.exe",
             "setupCommands": [
                 {
                     "description": "Habilitar la impresión con sangría para gdb",

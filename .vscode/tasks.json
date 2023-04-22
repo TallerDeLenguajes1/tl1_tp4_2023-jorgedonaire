@@ -3,13 +3,13 @@
         {
             "type": "cppbuild",
             "label": "C/C++: gcc.exe compilar archivo activo",
-            "command": "C:\\MinGW\\bin\\gcc.exe",
+            "command": "C:/MinGW/bin/gcc.exe",
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
                 "${file}",
                 "-o",
-                "${fileDirname}\\${fileBasenameNoExtension}.exe"
+                "${fileDirname}/${fileBasenameNoExtension}.exe"
             ],
             "options": {
                 "cwd": "${fileDirname}"

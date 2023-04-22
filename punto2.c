@@ -12,15 +12,16 @@ struct Tarea {
 void cargarTareas(Tarea **tareasPendientes, int cantidad);
 void mostrarTareas(Tarea **tareasPendientes, Tarea **tareasRealizadas,int cantidad);
 void listarTareas(Tarea **tareasPendientes,Tarea **tareasRealizadas,int cantidad);
+Tarea* buscarTarea(Tarea **tareasPendientes, Tarea **tareasRealizadas, int cantidad, int idBuscado);
 
 int main(){
-    int cantidadTareas;
+    int cantidadTareas,id;
     puts("Ingrese cantidad de tareas a realizar: ");
     scanf("%d", &cantidadTareas);
 
     Tarea** tareasPendientes = (Tarea**) malloc(sizeof(Tarea*)*cantidadTareas);
     Tarea** tareasRealizadas = (Tarea**) malloc(sizeof(Tarea*)*cantidadTareas);
-
+    Tarea* tareaAux;
     //inicializo en null todos los elementos del vector
     for (int i = 0; i < cantidadTareas; i++)
     {
@@ -31,6 +32,11 @@ int main(){
     cargarTareas(tareasPendientes, cantidadTareas);
     listarTareas(tareasPendientes,tareasRealizadas,cantidadTareas);
     mostrarTareas(tareasPendientes, tareasRealizadas, cantidadTareas);
+
+    puts("Ingrese el ID ");
+    scanf("%d", &id);
+    tareaAux=buscarTarea(tareasPendientes,tareasRealizadas,cantidadTareas,id);
+    printf("Tarea encontrada: %s", tareaAux->Descripcion);
 
     //liberar memoria
     for (int i = 0; i < cantidadTareas; i++)
@@ -108,6 +114,21 @@ void mostrarTareas(Tarea **tareasPendientes, Tarea **tareasRealizadas, int canti
     } 
 }
 
-void buscarTarea(){
+Tarea* buscarTarea(Tarea **tareasPendientes, Tarea **tareasRealizadas, int cantidad, int idBuscado){
+    for (int i = 0; i < cantidad; i++)
+    {
+        if (tareasRealizadas[i]!= NULL && tareasRealizadas[i]->TareaID == idBuscado)
+        {
+            return tareasRealizadas[i];
+            break;
+        }
+
+        if (tareasPendientes[i]!= NULL && tareasPendientes[i]->TareaID == idBuscado)
+        {
+            return tareasPendientes[i];
+            break;
+        }
+    }
+    return NULL;
     
 }
