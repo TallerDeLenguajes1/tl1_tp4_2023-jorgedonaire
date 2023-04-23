@@ -9,56 +9,43 @@ struct Tarea {
     int Duracion; // entre 10 – 100
 }typedef Tarea;
 
+void inicializarTareas(Tarea **tareasPendientes, Tarea **tareasRealizadas, int cantidadTareas);
 void cargarTareas(Tarea **tareasPendientes, int cantidad);
 void mostrarTareas(Tarea **tareasPendientes, Tarea **tareasRealizadas,int cantidad);
 void listarTareas(Tarea **tareasPendientes,Tarea **tareasRealizadas,int cantidad);
 Tarea* BuscarTareaPorPalabra (Tarea **tareasPendientes,Tarea **tareasRealizadas, char *palabraBuscada,int cantidad);
 Tarea* BuscarTareaPorId(Tarea **tareasPendientes, Tarea **tareasRealizadas, int cantidad, int idBuscado);
+void BuscarTarea(Tarea ** tareasPendientes, Tarea ** tareasRealizadas, int cantidadTareas);
+void liberarMemoria(Tarea ** tareasPendientes, Tarea **tareasRealizadas, int cantidadTareas);
 
 
 int main(){
-
     int cantidadTareas,id;
-    char *palabraBuscada="romper";
+    
     puts("Ingrese cantidad de tareas a realizar: ");
     scanf("%d", &cantidadTareas);
 
+    //Reserva de Memoria para lista de Tareas Pendientes y Realizadas
     Tarea** tareasPendientes = (Tarea**) malloc(sizeof(Tarea*)*cantidadTareas);
     Tarea** tareasRealizadas = (Tarea**) malloc(sizeof(Tarea*)*cantidadTareas);
     Tarea* tareaAux;
 
-    //inicializo en null todos los elementos del vector
+    inicializarTareas(tareasPendientes,tareasRealizadas,cantidadTareas);
+    cargarTareas(tareasPendientes, cantidadTareas);
+    listarTareas(tareasPendientes,tareasRealizadas,cantidadTareas);
+    mostrarTareas(tareasPendientes, tareasRealizadas, cantidadTareas);
+    BuscarTarea(tareasPendientes,tareasRealizadas,cantidadTareas);
+    liberarMemoria(tareasPendientes,tareasRealizadas,cantidadTareas);
+
+    return 0;
+}
+
+void inicializarTareas(Tarea **tareasPendientes, Tarea **tareasRealizadas, int cantidadTareas){
     for (int i = 0; i < cantidadTareas; i++)
     {
         tareasPendientes[i] = NULL;
         tareasRealizadas[i] = NULL;
     }
-
-    cargarTareas(tareasPendientes, cantidadTareas);
-    listarTareas(tareasPendientes,tareasRealizadas,cantidadTareas);
-    mostrarTareas(tareasPendientes, tareasRealizadas, cantidadTareas);
-
-    // printf("Ingrese la palabra buscada: ");
-    // scanf("%s", palabraBuscada);
-
-    tareaAux = BuscarTarea(tareasPendientes, tareasRealizadas, palabraBuscada, cantidadTareas);
-    printf("La tarea encontrada es: %s\n", tareaAux->Descripcion);
-    printf("Nro de tarea: %d", tareaAux->TareaID);
-
-    puts("Ingrese el ID ");
-    scanf("%d", &id);
-    tareaAux=buscarTarea(tareasPendientes,tareasRealizadas,cantidadTareas,id);
-    printf("Tarea encontrada: %s", tareaAux->Descripcion);
-
-    //liberar memoria
-    for (int i = 0; i < cantidadTareas; i++)
-    {
-        free (tareasPendientes);
-        free (tareasPendientes[i]);
-        free (tareasPendientes[i]->Descripcion);
-    }
-    
-    return 0;
 }
 
 void cargarTareas(Tarea **tareasPendientes, int cantidad){
@@ -77,12 +64,11 @@ void cargarTareas(Tarea **tareasPendientes, int cantidad){
 }
 
 void listarTareas(Tarea **tareasPendientes,Tarea **tareasRealizadas,int cantidad){
-    // char respuesta[3];
+    
     int respuesta;
-
     for (int i = 0; i < cantidad; i++)
     {
-        printf("Se realizo la siguiente tarea? - %s (1/0): ", tareasPendientes[i]->Descripcion);
+        printf("Se realizo la siguiente tarea? - %s (1.SI/0.NO): ", tareasPendientes[i]->Descripcion);
         scanf("%d", &respuesta);
 
         if (respuesta == 1)
@@ -168,5 +154,56 @@ Tarea* BuscarTareaPorId(Tarea **tareasPendientes, Tarea **tareasRealizadas, int 
         }
     }
     return NULL;
+    
+}
+
+void BuscarTarea(Tarea ** tareasPendientes, Tarea ** tareasRealizadas, int cantidadTareas){
+    int tarea, id;
+    Tarea *tareaAux;
+    char *palabraBuscada=(char *)malloc(sizeof(char)*50);
+    int bandera = 1;
+
+    while (bandera == 1)
+    {
+        puts("****************BUSQUEDA DE TAREA *******************");
+        puts("Ingrese el metodo de busqueda");
+        printf("1.Por ID\n2.Por palabra\n3.Salir\n");
+        scanf("%d", &tarea);
+
+        switch (tarea)
+        {
+        case 1:
+            puts("Ingrese el ID ");
+            scanf("%d", &id);
+            tareaAux=BuscarTareaPorId(tareasPendientes,tareasRealizadas,cantidadTareas,id);
+            printf("Tarea encontrada: %s\n", tareaAux->Descripcion);
+            break;
+
+        case 2:
+            printf("Ingrese la palabra buscada: ");
+            scanf("%s", palabraBuscada);
+            tareaAux = BuscarTareaPorPalabra(tareasPendientes, tareasRealizadas, palabraBuscada, cantidadTareas);
+            free(palabraBuscada);
+            printf("La tarea encontrada es: %s\n", tareaAux->Descripcion);
+            printf("Nro de tarea: %d\n", tareaAux->TareaID);
+            break;
+        case 3:
+            bandera = 0;
+            break;
+        default:
+            puts("Valor ingresado incorrecto");
+            break;
+        }
+    }
+    
+}
+
+void liberarMemoria(Tarea ** tareasPendientes, Tarea **tareasRealizadas, int cantidadTareas){
+    for (int i = 0; i < cantidadTareas; i++)
+    {
+        free (tareasPendientes);
+        free (tareasPendientes[i]);
+        free (tareasPendientes[i]->Descripcion);
+    }
     
 }
