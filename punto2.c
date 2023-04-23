@@ -12,13 +12,14 @@ struct Tarea {
 void cargarTareas(Tarea **tareasPendientes, int cantidad);
 void mostrarTareas(Tarea **tareasPendientes, Tarea **tareasRealizadas,int cantidad);
 void listarTareas(Tarea **tareasPendientes,Tarea **tareasRealizadas,int cantidad);
-Tarea* BuscarTarea (Tarea **tareasPendientes,Tarea **tareasRealizadas, char *palabraBuscada,int cantidad);
+Tarea* BuscarTareaPorPalabra (Tarea **tareasPendientes,Tarea **tareasRealizadas, char *palabraBuscada,int cantidad);
+Tarea* BuscarTareaPorId(Tarea **tareasPendientes, Tarea **tareasRealizadas, int cantidad, int idBuscado);
+
 
 int main(){
-    int cantidadTareas;
+
+    int cantidadTareas,id;
     char *palabraBuscada="romper";
-
-
     puts("Ingrese cantidad de tareas a realizar: ");
     scanf("%d", &cantidadTareas);
 
@@ -44,6 +45,10 @@ int main(){
     printf("La tarea encontrada es: %s\n", tareaAux->Descripcion);
     printf("Nro de tarea: %d", tareaAux->TareaID);
 
+    puts("Ingrese el ID ");
+    scanf("%d", &id);
+    tareaAux=buscarTarea(tareasPendientes,tareasRealizadas,cantidadTareas,id);
+    printf("Tarea encontrada: %s", tareaAux->Descripcion);
 
     //liberar memoria
     for (int i = 0; i < cantidadTareas; i++)
@@ -121,7 +126,7 @@ void mostrarTareas(Tarea **tareasPendientes, Tarea **tareasRealizadas, int canti
     } 
 }
 
-Tarea* BuscarTarea (Tarea **tareasPendientes,Tarea **tareasRealizadas, char * palabraBuscada,int cantidad){
+Tarea* BuscarTareaPorPalabra (Tarea **tareasPendientes,Tarea **tareasRealizadas, char * palabraBuscada,int cantidad){
 
     for (int i = 0; i < cantidad; i++)
     {
@@ -145,4 +150,23 @@ Tarea* BuscarTarea (Tarea **tareasPendientes,Tarea **tareasRealizadas, char * pa
             
     }
     return NULL;
+}
+
+Tarea* BuscarTareaPorId(Tarea **tareasPendientes, Tarea **tareasRealizadas, int cantidad, int idBuscado){
+    for (int i = 0; i < cantidad; i++)
+    {
+        if (tareasRealizadas[i]!= NULL && tareasRealizadas[i]->TareaID == idBuscado)
+        {
+            return tareasRealizadas[i];
+            break;
+        }
+
+        if (tareasPendientes[i]!= NULL && tareasPendientes[i]->TareaID == idBuscado)
+        {
+            return tareasPendientes[i];
+            break;
+        }
+    }
+    return NULL;
+    
 }
