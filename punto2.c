@@ -12,14 +12,19 @@ struct Tarea {
 void cargarTareas(Tarea **tareasPendientes, int cantidad);
 void mostrarTareas(Tarea **tareasPendientes, Tarea **tareasRealizadas,int cantidad);
 void listarTareas(Tarea **tareasPendientes,Tarea **tareasRealizadas,int cantidad);
+Tarea* BuscarTarea (Tarea **tareasPendientes,Tarea **tareasRealizadas, char *palabraBuscada,int cantidad);
 
 int main(){
     int cantidadTareas;
+    char *palabraBuscada="romper";
+
+
     puts("Ingrese cantidad de tareas a realizar: ");
     scanf("%d", &cantidadTareas);
 
     Tarea** tareasPendientes = (Tarea**) malloc(sizeof(Tarea*)*cantidadTareas);
     Tarea** tareasRealizadas = (Tarea**) malloc(sizeof(Tarea*)*cantidadTareas);
+    Tarea* tareaAux;
 
     //inicializo en null todos los elementos del vector
     for (int i = 0; i < cantidadTareas; i++)
@@ -31,6 +36,14 @@ int main(){
     cargarTareas(tareasPendientes, cantidadTareas);
     listarTareas(tareasPendientes,tareasRealizadas,cantidadTareas);
     mostrarTareas(tareasPendientes, tareasRealizadas, cantidadTareas);
+
+    // printf("Ingrese la palabra buscada: ");
+    // scanf("%s", palabraBuscada);
+
+    tareaAux = BuscarTarea(tareasPendientes, tareasRealizadas, palabraBuscada, cantidadTareas);
+    printf("La tarea encontrada es: %s\n", tareaAux->Descripcion);
+    printf("Nro de tarea: %d", tareaAux->TareaID);
+
 
     //liberar memoria
     for (int i = 0; i < cantidadTareas; i++)
@@ -106,4 +119,24 @@ void mostrarTareas(Tarea **tareasPendientes, Tarea **tareasRealizadas, int canti
 
         }
     } 
+}
+
+Tarea* BuscarTarea (Tarea **tareasPendientes,Tarea **tareasRealizadas, char * palabraBuscada,int cantidad){
+
+    for (int i = 0; i < cantidad; i++)
+    {
+        char * resultadoDePendientes = strstr(tareasPendientes[i]->Descripcion, palabraBuscada);
+        char * resultadoDeRealizadas = strstr(tareasRealizadas[i]->Descripcion, palabraBuscada);
+        
+            if (resultadoDePendientes != NULL)
+            {
+                return tareasPendientes[i];
+            }
+
+            if (resultadoDeRealizadas != NULL)
+            {
+                return tareasRealizadas[i];
+            }
+            
+    }
 }
