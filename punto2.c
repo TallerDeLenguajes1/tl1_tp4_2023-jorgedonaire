@@ -125,18 +125,23 @@ Tarea* BuscarTarea (Tarea **tareasPendientes,Tarea **tareasRealizadas, char * pa
 
     for (int i = 0; i < cantidad; i++)
     {
-        char * resultadoDePendientes = strstr(tareasPendientes[i]->Descripcion, palabraBuscada);
-        char * resultadoDeRealizadas = strstr(tareasRealizadas[i]->Descripcion, palabraBuscada);
-        
+        if (tareasPendientes[i] != NULL)
+        {
+            char * resultadoDePendientes = strstr(tareasPendientes[i]->Descripcion, palabraBuscada);
             if (resultadoDePendientes != NULL)
             {
                 return tareasPendientes[i];
             }
+        }
 
+        if (tareasRealizadas[i] != NULL)
+        {
+            char * resultadoDeRealizadas = strstr(tareasRealizadas[i]->Descripcion, palabraBuscada);        
             if (resultadoDeRealizadas != NULL)
             {
                 return tareasRealizadas[i];
             }
+        }
             
     }
 }
