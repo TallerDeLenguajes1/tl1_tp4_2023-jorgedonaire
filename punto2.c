@@ -144,4 +144,5 @@ Tarea* BuscarTarea (Tarea **tareasPendientes,Tarea **tareasRealizadas, char * pa
         }
             
     }
+    return NULL;
 }
