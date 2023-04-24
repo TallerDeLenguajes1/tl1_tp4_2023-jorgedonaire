@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <time.h>
 
 struct Tarea
 {
@@ -13,9 +14,9 @@ struct Nodo
     Nodo *Siguiente;
 }typedef Nodo;
 
-Nodo *CrearNodo(Tarea nuevaTarea);
 Nodo *CrearListaVacia();
-
+Nodo *CrearNodo(Tarea NuevaTarea);
+void InsertarNodo(Nodo **Start, Tarea NuevaTarea);
 
 
 int main(){
@@ -25,31 +26,25 @@ int main(){
 
 }
 
-Nodo *CrearNodo(Tarea nuevaTarea){
-    Nodo *NuevoNodo = (Nodo *) malloc(sizeof(Nodo));
-    NuevoNodo->T.Descripcion = "DESCRIPCION";
-    NuevoNodo->Siguiente=NULL;
-    return NuevoNodo;
-}
-
 Nodo *CrearListaVacia(){
     return NULL;
 }
 
-void InsertarNodo(Nodo **Start, int valor){
-    Nodo *NuevoNodo = CrearNodo(valor);
+Nodo *CrearNodo(Tarea NuevaTarea){
+    srand(time(NULL));
+    Nodo *NuevoNodo = (Nodo *) malloc(sizeof(Nodo));
+    NuevoNodo->T.Descripcion = "DESCRIPCION";
+    NuevoNodo->T.Duracion=10+rand()%101;
+    NuevoNodo->Siguiente=NULL;
+    return NuevoNodo;
+}
+
+void InsertarNodo(Nodo **Start, Tarea NuevaTarea){
+    Nodo *NuevoNodo = CrearNodo(NuevaTarea);
     NuevoNodo->Siguiente=*Start;
     *Start = NuevoNodo;
 }
 
-Nodo * buscarNodo(Nodo * Start, int idBuscado){
-    Nodo * Aux = Start;
-    while (Aux && Aux->t != idBuscado)
-    {
-        Aux = Aux->Siguiente;
-    }
-    return Aux;
-}
 
 void EliminarNodo(Nodo * nodo){
     if (!nodo)
