@@ -37,6 +37,7 @@ int main(){
     BuscarTarea(tareasPendientes,tareasRealizadas,cantidadTareas);
     liberarMemoria(tareasPendientes,tareasRealizadas,cantidadTareas);
 
+    getchar();
     return 0;
 }
 
