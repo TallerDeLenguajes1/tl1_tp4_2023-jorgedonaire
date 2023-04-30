@@ -55,21 +55,24 @@ int main(){
 
     do
     {
-        printf("--------TAREAS PENDIENTES---------\n");
+        printf("///////////////////////////////////////\n");
+        printf("\n*********TAREAS PENDIENTES*********\n");
         mostrarLista(TareasPendientes);
-        printf("--------TAREAS EN PROCESO---------\n");
+        printf("\n*********TAREAS EN PROCESO*********\n");
         mostrarLista(TareasEnProceso);
-        printf("--------TAREAS REALIZADAS---------\n");
+        printf("\n*********TAREAS REALIZADAS*********\n");
         mostrarLista(TareasRealizadas);
-        puts("\n******* Seleccione una Tarea *******\n");
-        printf("Ingrese el ID: ");
+        printf("///////////////////////////////////////\n");
+
+        puts("\n******* Seleccion de Tarea para modificar *******\n");
+        printf("Ingrese el ID de la tarea: ");
         fflush(stdin);
         scanf("%d", &idBuscado);
         Nodo *nodoBuscadoID = buscarTareaPorID(&TareasPendientes, &TareasRealizadas, &TareasEnProceso, idBuscado);
         puts("-------TAREA ENCONTRADA--------\n");
-        printf("DESCRIPCION: %s\n", nodoBuscadoID->T.Descripcion);
-        printf("TAREA Nro: %d\n", nodoBuscadoID->T.TareaID);
-        printf("DURACION: %d\n", nodoBuscadoID->T.Duracion);
+        printf("\tDescripcion: %s\n", nodoBuscadoID->T.Descripcion);
+        printf("\tTarea Nro: %d\n", nodoBuscadoID->T.TareaID);
+        printf("\tDuracion: %d\n", nodoBuscadoID->T.Duracion);
 
         printf("\n---------- Seleccione una opcion para la tarea ----------\n");
         printf("1-: MOVER A OTRA LISTA\n");
@@ -101,7 +104,13 @@ int main(){
                 
                 case 2:
                     nodoEliminado = extraerNodo(&TareasPendientes, idBuscado);
-                    eliminar(nodoEliminado);
+                    nodoEliminado = extraerNodo(&TareasRealizadas, idBuscado);
+                    nodoEliminado = extraerNodo(&TareasEnProceso, idBuscado);
+                    if (nodoEliminado)
+                    {
+                        eliminar(nodoEliminado);
+                    }
+                
                     break;
                 case 3:
                     break;
@@ -114,16 +123,20 @@ int main(){
         fflush(stdin);
         scanf("%d", &opcionModificarOtraTarea);
     } while (opcionModificarOtraTarea == 1);
-    
-    printf("--------TAREAS PENDIENTES---------\n");
+    printf("\n");
+    printf("-------- TAREAS PENDIENTES ---------\n");
     mostrarLista(TareasPendientes);
+    printf("\n");
     MostrarDatos(&TareasPendientes); //si va puntero doble paso &, sino solo la tarea
-    printf("--------TAREAS EN PROCESO---------\n");
+    printf("-------- TAREAS EN PROCESO ---------\n");
     mostrarLista(TareasEnProceso);
+    printf("\n");
     MostrarDatos(&TareasEnProceso);
-    printf("--------TAREAS REALIZADAS---------\n");
+    printf("-------- TAREAS REALIZADAS ---------\n");
     mostrarLista(TareasRealizadas);
+    printf("\n");
     MostrarDatos(&TareasRealizadas);
+    printf("\n");
 
     liberarMemoria(TareasPendientes);
     liberarMemoria(TareasEnProceso);
@@ -156,8 +169,8 @@ Tarea cargar(int contador){
 
     Tarea tarea;
     tarea.TareaID=contador;
-    printf("++++++++++ TAREA Nro: %d ++++++++++\n", tarea.TareaID);
-    puts("Ingrese una descripcion");
+    printf("--------- TAREA Nro: %d ---------\n", tarea.TareaID);
+    printf("Ingrese una descripcion: ");
     tarea.Descripcion=malloc(sizeof(char)*100);
     fflush(stdin);
     gets(tarea.Descripcion);
@@ -169,9 +182,9 @@ void mostrarLista(Nodo *tareas){
     Nodo *aux = tareas;
     while (aux != NULL)
     {
-        printf("-----Tarea Nro: %d -------\n", aux->T.TareaID);
-        printf("Descripcion: %s\n", aux->T.Descripcion);
-        printf("Duracion: %d\n", aux->T.Duracion);
+        printf("\tTarea Nro: %d \n", aux->T.TareaID);
+        printf("\tDescripcion: %s\n", aux->T.Descripcion);
+        printf("\tDuracion: %d\n", aux->T.Duracion);
 
         aux=aux->Siguiente;
     }
