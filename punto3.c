@@ -278,3 +278,5 @@ void liberarMemoria(Nodo *tareas){
     }
     
 }
+
+//modificaciones para el tp 5
