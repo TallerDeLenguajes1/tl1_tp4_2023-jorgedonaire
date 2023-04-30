@@ -26,88 +26,107 @@ void mostrarLista(Nodo *tareas);
 void controlarTareas(Nodo **TareasPendientes, Nodo **TareasRealizadas);
 Nodo *extraerNodo(Nodo **Start, int id);
 void mover(Nodo **TareasPendientes, Nodo **TareasRealizadas, int id);
-Nodo *buscarTareaPorID(Nodo **TareasPendientes, Nodo **TareasRealizadas, int id);
+Nodo *buscarTareaPorID(Nodo **TareasPendientes, Nodo **TareasRealizadas, Nodo **TareasEnProceso, int id);
 Nodo *buscarTareaPorPalabra(Nodo **TareasPendientes, Nodo **TareasRealizadas, char *palabraBuscada);
 void liberarMemoria(Nodo *tareas);
 void eliminar(Nodo *nodo);
-void MostrarDatos(Nodo **Lista);
+void MostrarDatos(Nodo **Lista); //va puntero doble o simple? (funciona de las 2 maneras)
 
 int main(){
-    int menu, idBuscado;
+    int menu, idBuscado, opcionDeTarea, opcionDeMoverTarea, opcionModificarOtraTarea;
     int contador=0;
     char *palabraBuscada = (char*)malloc(sizeof(char)*100);
-    Nodo * TareasPendientes, *TareasRealizadas, *TareasEnProceso;
+    Nodo * TareasPendientes, *TareasRealizadas, *TareasEnProceso, *nodoEliminado;
 
     TareasPendientes = CrearListaVacia(); 
     TareasRealizadas = CrearListaVacia();
     TareasEnProceso = CrearListaVacia();
     
+    printf("****** CARGAR TAREAS *******\n");
     do
     {
-        puts("*********** MENU ***********");
-        printf("\t1 - Cargar tareas\n");
-        printf("\t2 - Controlar tareas\n");
-        printf("\t3 - Mostrar tareas pendientes y realizadas\n");
-        printf("\t4 - Buscar tareas por ID\n");
-        printf("\t5 - Buscar tareas por palabra clave\n");
-        printf("\t6 - Salir\n");
-        puts("\n");
-        printf("Ingrese una opcion: ");
+        contador++;
+        Tarea tarea = cargar(contador);
+        InsertarNodo(&TareasPendientes, tarea);
+        printf("Desea agregar otra tarea? (1-SI , 2-NO):");
         fflush(stdin);
         scanf("%d", &menu);
+    } while (menu == 1);
 
-        switch (menu)
-        {
-        case 1:
-            do
-            {
-                contador++;
-                Tarea tarea = cargar(contador);
-                InsertarNodo(&TareasPendientes, tarea);
-                printf("Desea agregar otra tarea? (1-SI , 2-NO):");
-                fflush(stdin);
-                scanf("%d", &menu);
-            } while (menu == 1);
-            break;
+    do
+    {
+        printf("--------TAREAS PENDIENTES---------\n");
+        mostrarLista(TareasPendientes);
+        printf("--------TAREAS EN PROCESO---------\n");
+        mostrarLista(TareasEnProceso);
+        printf("--------TAREAS REALIZADAS---------\n");
+        mostrarLista(TareasRealizadas);
+        puts("\n******* Seleccione una Tarea *******\n");
+        printf("Ingrese el ID: ");
+        fflush(stdin);
+        scanf("%d", &idBuscado);
+        Nodo *nodoBuscadoID = buscarTareaPorID(&TareasPendientes, &TareasRealizadas, &TareasEnProceso, idBuscado);
+        puts("-------TAREA ENCONTRADA--------\n");
+        printf("DESCRIPCION: %s\n", nodoBuscadoID->T.Descripcion);
+        printf("TAREA Nro: %d\n", nodoBuscadoID->T.TareaID);
+        printf("DURACION: %d\n", nodoBuscadoID->T.Duracion);
 
-        case 2:
-            controlarTareas(&TareasPendientes,&TareasRealizadas);
-            break;
-        case 3:
-            printf("--------TAREAS PENDIENTES---------\n");
-            mostrarLista(TareasPendientes);
-            printf("--------TAREAS REALIZADAS---------\n");
-            mostrarLista(TareasRealizadas);
-            break;
+        printf("\n---------- Seleccione una opcion para la tarea ----------\n");
+        printf("1-: MOVER A OTRA LISTA\n");
+        printf("2-: ELIMINAR TAREA\n");
+        printf("3-: NO HACER NADA\n");
+        fflush(stdin);
+        scanf("%d", &opcionDeTarea);
 
-        case 4:
-            printf("------------BUSQUEDA POR ID-------------\n");
-            printf("Ingrese el ID: ");
-            fflush(stdin);
-            scanf("%d", &idBuscado);
-            Nodo *nodoBuscadoID = buscarTareaPorID(&TareasPendientes, &TareasRealizadas, idBuscado);
-            printf("DESCRIPCION: %s\n", nodoBuscadoID->T.Descripcion);
-            printf("TAREA Nro: %d\n", nodoBuscadoID->T.TareaID);
-            printf("DURACION: %d\n", nodoBuscadoID->T.Duracion);
-            break;
-        case 5:
-            printf("------------BUSQUEDA POR PALABRA-------------\n");
-            printf("Ingrese la palabra clave: ");
-            fflush(stdin);
-            gets(palabraBuscada);
-            Nodo *nodoBuscadoPorPalabra = buscarTareaPorPalabra(&TareasPendientes, &TareasRealizadas, palabraBuscada);
-            free(palabraBuscada);
-            printf("DESCRIPCION: %s \n", nodoBuscadoPorPalabra->T.Descripcion);
-            printf("TAREA Nro: %d \n", nodoBuscadoPorPalabra->T.TareaID);
-            printf("DURACION: %d \n", nodoBuscadoPorPalabra->T.Duracion);
-            break;
-        default:
-            break;
-        }
-    printf("\n");
-    } while (menu != 6);
+        switch (opcionDeTarea)
+                {
+                case 1:
+                    printf("A que lista desea mover la tarea?\n");
+                    printf("1 - EN PROCESO\n");
+                    printf("2 - REALIZADAS\n");
+                    fflush(stdin);
+                    scanf("%d", &opcionDeMoverTarea);
+
+                    if (opcionDeMoverTarea == 1)
+                    {
+                        mover(&TareasPendientes,&TareasEnProceso,idBuscado);
+                    }else if (opcionDeMoverTarea == 2)
+                    {
+                        mover(&TareasPendientes, &TareasRealizadas, idBuscado);
+                    }else
+                    {
+                        printf("Opcion incorrecta");
+                    }
+                    break;
+                
+                case 2:
+                    nodoEliminado = extraerNodo(&TareasPendientes, idBuscado);
+                    eliminar(nodoEliminado);
+                    break;
+                case 3:
+                    break;
+                default:
+                    puts("Opcion incorrecta");
+                    break;
+                }
+
+        printf("Desea modificar otra tarea? 1 - SI , 2 - NO: ");
+        fflush(stdin);
+        scanf("%d", &opcionModificarOtraTarea);
+    } while (opcionModificarOtraTarea == 1);
+    
+    printf("--------TAREAS PENDIENTES---------\n");
+    mostrarLista(TareasPendientes);
+    MostrarDatos(&TareasPendientes); //si va puntero doble paso &, sino solo la tarea
+    printf("--------TAREAS EN PROCESO---------\n");
+    mostrarLista(TareasEnProceso);
+    MostrarDatos(&TareasEnProceso);
+    printf("--------TAREAS REALIZADAS---------\n");
+    mostrarLista(TareasRealizadas);
+    MostrarDatos(&TareasRealizadas);
 
     liberarMemoria(TareasPendientes);
+    liberarMemoria(TareasEnProceso);
     liberarMemoria(TareasRealizadas);
     fflush(stdin);
     getchar();
@@ -210,9 +229,10 @@ void mover(Nodo **TareasPendientes, Nodo **TareasRealizadas, int id){
     InsertarNodo(TareasRealizadas,aux->T);
 }
 
-Nodo *buscarTareaPorID(Nodo **TareasPendientes, Nodo **TareasRealizadas, int id){
+Nodo *buscarTareaPorID(Nodo **TareasPendientes, Nodo **TareasRealizadas, Nodo **TareasEnProceso, int id){
     Nodo *auxTareasPendientes = *TareasPendientes;
     Nodo *auxTareasRealizadas = *TareasRealizadas;
+    Nodo *auxTareasEnProceso = *TareasEnProceso;
 
     while (auxTareasPendientes)
     {
@@ -231,6 +251,15 @@ Nodo *buscarTareaPorID(Nodo **TareasPendientes, Nodo **TareasRealizadas, int id)
         }
         
     }
+    while (auxTareasEnProceso)
+    {
+        if (id == auxTareasEnProceso->T.TareaID)
+        {
+            return auxTareasEnProceso;
+        }
+        
+    }
+    
     
     return NULL;
 }
@@ -289,7 +318,7 @@ void eliminar(Nodo *nodo){
     free(nodo);
 }
 
-void MostrarDatos(Nodo **Lista){
+void MostrarDatos(Nodo **Lista){ //va puntero doble o simple? (funciona de las 2 maneras)
     int contador=0, tiempoTotal=0;
 
     Nodo *auxLista = *Lista;
