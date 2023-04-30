@@ -34,10 +34,11 @@ int main(){
     int menu, idBuscado;
     int contador=0;
     char *palabraBuscada = (char*)malloc(sizeof(char)*100);
-    Nodo * TareasPendientes, *TareasRealizadas;
+    Nodo * TareasPendientes, *TareasRealizadas, *TareasEnProceso;
 
     TareasPendientes = CrearListaVacia(); 
     TareasRealizadas = CrearListaVacia();
+    TareasEnProceso = CrearListaVacia();
     
     do
     {
@@ -181,22 +182,22 @@ Nodo *extraerNodo(Nodo **Start, int id){
     Nodo *aux=*Start;
     Nodo *auxAnterior=*Start;
 
-    while (aux && aux->T.TareaID != id)
+    while (aux && aux->T.TareaID != id) //Recorre la lista
     {
         auxAnterior = aux;
         aux = aux->Siguiente;
     }
 
-    if (aux)
+    if (aux) //Si lo encuentra
     {
-        if (*Start == aux)
+        if (*Start == aux) //Si es el 1er elemento de la lista
         {
             *Start = aux->Siguiente;
-        }else
+        }else // Si es cualquier otro
         {
             auxAnterior->Siguiente = aux->Siguiente;
         }
-        aux->Siguiente=NULL;
+        aux->Siguiente=NULL; //porque? si no es el ultimo elemento?
     }
     
     return aux;
@@ -280,3 +281,8 @@ void liberarMemoria(Nodo *tareas){
 }
 
 //modificaciones para el tp 5
+
+void eliminar(Nodo *nodo){
+    free(nodo->T.Descripcion);
+    free(nodo);
+}
