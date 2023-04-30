@@ -29,6 +29,8 @@ void mover(Nodo **TareasPendientes, Nodo **TareasRealizadas, int id);
 Nodo *buscarTareaPorID(Nodo **TareasPendientes, Nodo **TareasRealizadas, int id);
 Nodo *buscarTareaPorPalabra(Nodo **TareasPendientes, Nodo **TareasRealizadas, char *palabraBuscada);
 void liberarMemoria(Nodo *tareas);
+void eliminar(Nodo *nodo);
+void MostrarDatos(Nodo **Lista);
 
 int main(){
     int menu, idBuscado;
@@ -285,4 +287,18 @@ void liberarMemoria(Nodo *tareas){
 void eliminar(Nodo *nodo){
     free(nodo->T.Descripcion);
     free(nodo);
+}
+
+void MostrarDatos(Nodo **Lista){
+    int contador=0, tiempoTotal=0;
+
+    Nodo *auxLista = *Lista;
+    while (auxLista)
+    {
+        contador++;
+        tiempoTotal = tiempoTotal+auxLista->T.Duracion;
+        auxLista = auxLista->Siguiente;
+    }
+    printf("La cantidad de tareas en esta lista es: %d\n", contador);
+    printf("El tiempo total de las tareas asociadas a esta lista es: %d\n", tiempoTotal);
 }
